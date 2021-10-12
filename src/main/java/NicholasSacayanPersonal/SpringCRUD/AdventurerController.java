@@ -1,21 +1,16 @@
 package NicholasSacayanPersonal.SpringCRUD;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping(path="/adventurer")
+@RestController
+@RequestMapping(path="/api/adventurer")
 public class AdventurerController {
     @Autowired
     private AdventurerRepository adventurerRepository;
 
     @PostMapping(path="/add") // Map ONLY POST Requests
-    public @ResponseBody String addNewCharacter (@RequestParam String name
+    public String addNewCharacter (@RequestParam String name
             , @RequestParam String job) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
@@ -27,8 +22,20 @@ public class AdventurerController {
         return "Saved";
     }
 
+    @DeleteMapping
+    public String deleteCharacter (@RequestParam String name) {
+
+        return "Deleted";
+    }
+
+    @PatchMapping
+    public String patchCharacter (@RequestParam String name, @RequestParam String newName) {
+
+        return "Patched";
+    }
+
     @GetMapping(path="/all")
-    public @ResponseBody Iterable<Adventurer> getAllCharacters() {
+    public Iterable<Adventurer> getAllCharacters() {
         // This returns a JSON or XML with the users
         return adventurerRepository.findAll();
     }
