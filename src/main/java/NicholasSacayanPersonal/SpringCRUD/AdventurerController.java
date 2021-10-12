@@ -3,13 +3,15 @@ package NicholasSacayanPersonal.SpringCRUD;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping(path="/api/adventurer")
 public class AdventurerController {
     @Autowired
     private AdventurerRepository adventurerRepository;
 
-    @PostMapping(path="/add") // Map ONLY POST Requests
+    @PostMapping // Map ONLY POST Requests
     public String addNewCharacter (@RequestParam String name
             , @RequestParam String job) {
         // @ResponseBody means the returned String is the response, not a view name
@@ -23,19 +25,21 @@ public class AdventurerController {
     }
 
     @DeleteMapping
-    public String deleteCharacter (@RequestParam String name) {
-
+    public String deleteAdventurer(@RequestParam Integer id) {
+        adventurerRepository.deleteById(id);
         return "Deleted";
     }
 
     @PatchMapping
-    public String patchCharacter (@RequestParam String name, @RequestParam String newName) {
-
+    public String patchAdventurer(@RequestParam Integer id, @RequestParam String newName) {
+        Optional<Adventurer> adventurer = adventurerRepository.findById(id);
+        adventurer.get().setName(newName);
+        adventurerRepository.save(adventurer.get());
         return "Patched";
     }
 
-    @GetMapping(path="/all")
-    public Iterable<Adventurer> getAllCharacters() {
+    @GetMapping("/all")
+    public Iterable<Adventurer> getAllAdventurers() {
         // This returns a JSON or XML with the users
         return adventurerRepository.findAll();
     }
